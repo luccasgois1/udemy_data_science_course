@@ -1,3 +1,7 @@
+# CONFIDENCE INTERVALS
+# INDEPENDENT SAMPLES
+# KNOWN POPULATION VARIANCES
+
 import pandas as pd
 import numpy as np
 from scipy.stats import norm
