@@ -1,12 +1,6 @@
 import pandas as pd
 import numpy as np
 
-
-def calc_statistic(y):
-    x = y['dataset']
-    return [np.around(x.mean()),np.around(x.std()),np.around(x.sem())]
-
-
 def select_tvalue(n, alfa, path_ttable='ttable.csv'):
     t_table = pd.read_table(path_ttable,sep=';',decimal=',',index_col=0)
     t_table.columns = t_table.columns.astype(float)
@@ -29,25 +23,25 @@ def select_tvalue(n, alfa, path_ttable='ttable.csv'):
 
 
 path_file = 'dataset.csv'
-df = pd.read_csv(path_file)
+df = pd.read_csv(path_file, decimal=',',sep=';',index_col=0)
+df1 = df.iloc[:,1]-df.iloc[:,0]
 
 # Task 1
+mean_df1 = df1.mean()
+std_df1 = df1.std()
 print('Task 1')
-statistics_list = calc_statistic(df)
-print('Mean -->{s[0]}\nSt.deviation -->{s[1]}\nStandart error --> {s[2]}\ncomplete!'.format(s=statistics_list))
-
+print('Mean -->',mean_df1)
+print('STD  -->',std_df1)
 
 # Task 3
-print('\nTask 3')
-CI = 0.99
-
-alfa = np.around(1.0 - CI,5)
-n = df.shape[0]-1
-t = select_tvalue(n, alfa)
-print('t[{0},{1}] = {2}'.format(alfa/2,n, t))
-
-# Task 4
-print('\nTask 4')
-CI_low = statistics_list[0]-(t*statistics_list[2])
-CI_high = statistics_list[0]+(t*statistics_list[2])
-print('CI_low: {0}\nCI_high: {1}'.format(CI_low, CI_high))
+print('Task 3')
+CI = .95
+alfa = 1. - CI
+n = df1.shape[0] - 1
+t=select_tvalue(n, alfa)
+CI_low = mean_df1 - std_df1*t/np.sqrt(n+1)
+CI_high = mean_df1 + std_df1*t/np.sqrt(n+1)
+print('CI         -->',CI)
+print('t[{0},{1}] -->'.format(n,np.around(alfa/2,5)),t)
+print('CI Low     -->',CI_low)
+print('CI High    -->',CI_high)
